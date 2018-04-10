@@ -22,19 +22,27 @@ A simple usage example:
 ```dart
 import 'package:libcalendar/libcalendar.dart';
 
-  void main() {
-   // September 7th, 2010 in Gregorian.
+void main() {
+  // September 7th, 2010 in Gregorian.
   final int year = 2010;
   final int month = 9;
   final int day = 7;
 
   // Convert to CJDN.
-  print(fromGregorianToCJDN(year, month, day));
+  final int cjdn = fromGregorianToCJDN(year, month, day);
+  print('September 7th, 2010 in CJDN: $cjdn');
 
   // Convert to Islamic.
   final DateTime islamic = fromGregorianToIslamic(year, month, day);
-  print(islamic);
+  print('September 7th, 2010 in Islamic: ${islamic.day}/${islamic.month}/${islamic.year}');
 }
+```
+
+The output should be as follows:
+
+```
+September 7th, 2010 in CJDN: 2455447
+September 7th, 2010 in Islamic: 28/9/1431
 ```
 
 ## Features and Bugs
