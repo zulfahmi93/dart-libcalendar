@@ -4,4 +4,4 @@
 ///
 library libcalendar;
 
-export 'src/gregorian_julian_converter.dart';
+export 'src/calendar_converter.dart';
