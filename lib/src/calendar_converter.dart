@@ -1,5 +1,9 @@
 import 'package:logging/logging.dart';
 
+List<int> _kDaysToMonth365 = <int>[0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+List<int> _kDaysToMonth366 = <int>[0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
+
+
 ///
 /// Sources: http://aa.quae.nl/en/reken/juliaansedag.html
 ///
@@ -25,9 +29,12 @@ int fromGregorianToCJDN(int year, int month, int day) {
     throw new _CalendarConversionError(msg);
   }
 
-  // Check day range.
-  if (day < 1 || day > 31) {
-    const String msg = 'Parameter [day] should be between 1 to 31.';
+  // Check day validity for given month.
+  final List<int> days = _isGregorianLeapYear(year) ? _kDaysToMonth366 : _kDaysToMonth365;
+  final int maxDay = days[month] - days[month - 1];
+
+  if (day < 1 || day > maxDay) {
+    final String msg = 'Parameter [day] should be between 1 to $maxDay.';
     log.severe(msg);
     throw new _CalendarConversionError(msg);
   }
@@ -92,6 +99,13 @@ DateTime fromCJDNtoGregorian(int cjdn) {
     ..info('year = $year');
 
   return new DateTime.utc(year, month, day);
+}
+
+///
+/// Check whether given Gregorian year is a leap year.
+///
+bool _isGregorianLeapYear(int year) {
+  return (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
 }
 
 ///

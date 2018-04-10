@@ -28,7 +28,7 @@ void fromGregorianToCJDNYearParameterMoreThan2100() {
 }
 
 void fromGregorianToCJDNMonthParameterLessThan1() {
-  test('Invalid year parameter (less than 1900) should throw error.', () {
+  test('Invalid month parameter (less than 1) should throw error.', () {
     try {
       fromGregorianToCJDN(2000, 0, 1);
       // ignore: avoid_catches_without_on_clauses
@@ -41,7 +41,7 @@ void fromGregorianToCJDNMonthParameterLessThan1() {
 }
 
 void fromGregorianToCJDNMonthParameterMoreThan12() {
-  test('Invalid year parameter (more than 2100) should throw error.', () {
+  test('Invalid month parameter (more than 12) should throw error.', () {
     try {
       fromGregorianToCJDN(2000, 13, 1);
       // ignore: avoid_catches_without_on_clauses
@@ -54,7 +54,7 @@ void fromGregorianToCJDNMonthParameterMoreThan12() {
 }
 
 void fromGregorianToCJDNDayParameterLessThan1() {
-  test('Invalid year parameter (less than 1900) should throw error.', () {
+  test('Invalid day parameter (less than 1) should throw error.', () {
     try {
       fromGregorianToCJDN(2000, 1, 0);
       // ignore: avoid_catches_without_on_clauses
@@ -67,7 +67,7 @@ void fromGregorianToCJDNDayParameterLessThan1() {
 }
 
 void fromGregorianToCJDNDayParameterMoreThan31() {
-  test('Invalid year parameter (more than 2100) should throw error.', () {
+  test('Invalid day parameter (more than 31) should throw error.', () {
     try {
       fromGregorianToCJDN(2000, 1, 32);
       // ignore: avoid_catches_without_on_clauses
