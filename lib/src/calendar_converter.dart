@@ -102,6 +102,87 @@ DateTime fromCJDNtoGregorian(int cjdn) {
 }
 
 ///
+/// Converts Islamic calendar, given by parameter [year], [month] and [day]
+/// to Chronological Julian Day Number (CJDN).
+///
+int fromIslamicToCJDN(int year, int month, int day) {
+  final Logger log = new Logger('libcalendar-fromIslamicToCJDN()');
+
+  // Check year range.
+  if (year < 1317 || year > 1524) {
+    const String msg = 'Parameter [year] should be between 1317 to 1524.';
+    log.severe(msg);
+    throw new _CalendarConversionError(msg);
+  }
+
+  // Check month range.
+  if (month < 1 || month > 12) {
+    const String msg = 'Parameter [month] should be between 1 to 12.';
+    log.severe(msg);
+    throw new _CalendarConversionError(msg);
+  }
+
+  // Check day range.
+  if (day < 1 || day > 30) {
+    const String msg = 'Parameter [day] should be between 1 to 30.';
+    log.severe(msg);
+    throw new _CalendarConversionError(msg);
+  }
+
+  // Check date range.
+  final DateTime date = new DateTime.utc(year, month, day);
+  final DateTime min = new DateTime.utc(1317, 8, 28);
+  final DateTime max = new DateTime.utc(1528, 10, 30);
+  if (date.compareTo(min) < 0 || date.compareTo(max) >= 0) {
+    const String msg = 'Invalid Islamic date range. It should be between Sha\'aban 28th, 1317 until Shawwal 29th, 1524.';
+    log.severe(msg);
+    throw new _CalendarConversionError(msg);
+  }
+
+  final int k2 = (((10631 * year) - 10617) / 30).floor();
+  final int k1 = (((325 * month) - 320) / 11).floor();
+  final int cjdn = k2 + k1 + day + 1948439;
+
+  log
+    ..info('k2 = $k2')
+    ..info('k1 = $k1')
+    ..info('cjdn = $cjdn');
+
+  return cjdn;
+}
+
+///
+/// Converts Chronological Julian Day Number (CJDN) given by parameter [cjdn]
+/// to Islamic calendar as [DateTime] object. The [DateTime] object returned
+/// will be always in UTC.
+///
+DateTime fromCJDNtoIslamic(int cjdn) {
+  final Logger log = new Logger('libcalendar-fromCJDNtoIslamic()');
+
+  // Check range (1/1/1900 to 31/12/2100).
+  if (cjdn < 2415021 || cjdn > 2488434) {
+    const String msg = 'Parameter [cjdn] should be between 2415021 to 2488434.';
+    log.severe(msg);
+    throw new _CalendarConversionError(msg);
+  }
+
+  final int k2 = (30 * (cjdn - 1948440)) + 15;
+  final int k1 = (11 * ((k2 % 10631) / 30).floor()) + 5;
+  final int day = ((k1 % 325) / 11).floor() + 1;
+  final int month = (k1 / 325).floor() + 1;
+  final int year = (k2 / 10631).floor() + 1;
+
+  log
+    ..info('k2 = $k2')
+    ..info('k1 = $k1')
+    ..info('day = $day')
+    ..info('month = $month')
+    ..info('year = $year');
+
+  return new DateTime.utc(year, month, day);
+}
+
+///
 /// Check whether given Gregorian year is a leap year.
 ///
 bool _isGregorianLeapYear(int year) {
