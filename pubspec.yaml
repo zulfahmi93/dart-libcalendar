@@ -2,6 +2,7 @@ name: libcalendar
 description: Calendar Conversion Library for Dart.
 version: 0.0.1
 author: Zulfahmi Ahmad <zulfahmi93@outlook.com>
+homepage: https://github.com/zulfahmi93/dart_libcalendar
 
 environment:
   sdk: '>=1.20.1 <2.0.0'
