@@ -3,6 +3,7 @@ import 'package:test/test.dart';
 import 'cjdn_islamic.dart';
 import 'from_cjdn_to_gregorian_test.dart';
 import 'from_gregorian_to_cjdn_test.dart';
+import 'gregorian_islamic_test.dart';
 
 void main() {
   // Uncomment the code below to show log.
@@ -71,6 +72,20 @@ void testCalendarConverterDartFile() {
       fromCJDNtoIslamicCjdnParameterLessThan2415021();
       fromCJDNtoIslamicCjdnParameterMoreThan2488434();
       fromCJDNtoIslamicConvert2455774ToGregorian();
+    });
+
+    //
+    // fromIslamicToGregorian().
+    //
+    group('fromIslamicToGregorian() method tests.', () {
+      fromIslamicToGregorianConvertShaaban29th1432ToGregorian();
+    });
+
+    //
+    // fromGregoriantoIslamic().
+    //
+    group('fromGregoriantoIslamic() method tests.', () {
+      fromGregoriantoIslamicConvertJuly31st2011ToIslamic();
     });
   });
 }

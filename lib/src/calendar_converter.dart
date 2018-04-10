@@ -183,6 +183,32 @@ DateTime fromCJDNtoIslamic(int cjdn) {
 }
 
 ///
+/// Converts Gregorian calendar, given by parameter [year], [month] and [day]
+/// to Islamic calendar.
+///
+DateTime fromGregorianToIslamic(int year, int month, int day) {
+  // Convert to CDJN.
+  final int cjdn = fromGregorianToCJDN(year, month, day);
+
+  // Convert to Islamic.
+  final DateTime islamic = fromCJDNtoIslamic(cjdn);
+  return islamic;
+}
+
+///
+/// Converts Islamic calendar, given by parameter [year], [month] and [day]
+/// to Gregorian calendar.
+///
+DateTime fromIslamicToGregorian(int year, int month, int day) {
+  // Convert to CDJN.
+  final int cjdn = fromIslamicToCJDN(year, month, day);
+
+  // Convert to Gregorian.
+  final DateTime gregorian = fromCJDNtoGregorian(cjdn);
+  return gregorian;
+}
+
+///
 /// Check whether given Gregorian year is a leap year.
 ///
 bool _isGregorianLeapYear(int year) {
