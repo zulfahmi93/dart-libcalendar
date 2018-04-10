@@ -23,7 +23,7 @@ class CalendarConverter {
 
     // If month is January or February, subtract 1 from year.
     final int year = gregorianInUtc.month < 3
-        ? gregorianInUtc.year - 12
+        ? gregorianInUtc.year - 1
         : gregorianInUtc.year;
 
     final int A = year ~/ 100;
