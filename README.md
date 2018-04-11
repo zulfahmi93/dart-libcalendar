@@ -13,6 +13,10 @@ This library defines the following methods for calendar conversion:
   - Gregorian calendar to Islamic calendar conversion.
 - `fromIslamicToGregorian()`
   - Islamic calendar to Gregorian calendar conversion.
+- `fromGregorianToJulianDate()`
+  - Gregorian calendar to Julian Date conversion.
+- `fromJulianDateToGregorian()`
+  - Julian Date to Gregorian calendar conversion.
 
 
 ## How to use
