@@ -2,6 +2,8 @@ import 'package:logging/logging.dart';
 
 List<int> _kDaysToMonth365 = <int>[0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
 List<int> _kDaysToMonth366 = <int>[0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
+DateTime _kJulianEpoch = new DateTime.utc(-4713, 11, 24, 12, 0);
+int _kMicrosecondsInOneDay = 86400000000;
 
 
 ///
@@ -213,6 +215,41 @@ DateTime fromIslamicToGregorian(int year, int month, int day) {
 ///
 bool _isGregorianLeapYear(int year) {
   return (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
+}
+
+///
+/// Converts Gregorian date and time, given by parameter [dateTimeInUtc]
+/// to Julian Date.
+///
+double fromGregorianToJulianDate(DateTime dateTimeInUtc) {
+  assert(dateTimeInUtc != null);
+  final Logger log = new Logger('libcalendar-fromGregorianToJulianDate()');
+
+  // Check UTC-ness.
+  if (!dateTimeInUtc.isUtc) {
+    const String msg = 'Parameter [dateTimeInUtc] should be in UTC.';
+    log.severe(msg);
+    throw new _CalendarConversionError(msg);
+  }
+
+  final Duration difference = dateTimeInUtc.difference(_kJulianEpoch);
+  final double jd = difference.inMicroseconds / _kMicrosecondsInOneDay;
+
+  return jd;
+}
+
+///
+/// Converts Julian Date given by parameter [jd]to Gregorian date and time as
+/// [DateTime] object. The [DateTime] object returned will be always in UTC.
+///
+DateTime fromJulianDateToGregorian(double jd) {
+  assert(jd != null);
+
+  final int us = (jd * _kMicrosecondsInOneDay).toInt();
+  final Duration duration = new Duration(microseconds: us);
+  final DateTime dateTime = _kJulianEpoch.add(duration);
+
+  return dateTime;
 }
 
 ///
