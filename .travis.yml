@@ -1,6 +1,6 @@
-language:
-  dart:
-    - dev
+language: dart
+dart:
+  - dev
 
 sudo: false
 os:
