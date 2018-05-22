@@ -1,0 +1,7 @@
+language:
+  dart:
+    - dev
+
+sudo: false
+os:
+  - linux
