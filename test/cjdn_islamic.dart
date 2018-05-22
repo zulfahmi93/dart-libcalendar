@@ -1,6 +1,26 @@
 import 'package:libcalendar/libcalendar.dart';
 import 'package:test/test.dart';
 
+void main() {
+  group('fromIslamicToCJDN() method tests.', () {
+    fromIslamicToCJDNYearParameterLessThan1317();
+    fromIslamicToCJDNYearParameterMoreThan1524();
+    fromIslamicToCJDNMonthParameterLessThan1();
+    fromIslamicToCJDNMonthParameterMoreThan12();
+    fromIslamicToCJDNDayParameterLessThan1();
+    fromIslamicToCJDNDayParameterMoreThan30();
+    fromIslamicToCJDNDateBeforeShaaban28th1317();
+    fromIslamicToCJDNDateAfterShawwal29th1524();
+    fromIslamicToCJDNConvertShaaban29th1432ToCJDN();
+  });
+
+  group('fromCJDNtoIslamic() method tests.', () {
+    fromCJDNtoIslamicCjdnParameterLessThan2415021();
+    fromCJDNtoIslamicCjdnParameterMoreThan2488434();
+    fromCJDNtoIslamicConvert2455774ToGregorian();
+  });
+}
+
 void fromIslamicToCJDNYearParameterLessThan1317() {
   test('Invalid year parameter (less than 1317) should throw error.', () {
     try {

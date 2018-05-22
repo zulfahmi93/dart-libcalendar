@@ -1,6 +1,24 @@
 import 'package:libcalendar/libcalendar.dart';
 import 'package:test/test.dart';
 
+void main() {
+  group('fromGregorianToCJDN() method tests.', () {
+    fromGregorianToCJDNYearParameterLessThan1900();
+    fromGregorianToCJDNYearParameterMoreThan2100();
+    fromGregorianToCJDNMonthParameterLessThan1();
+    fromGregorianToCJDNMonthParameterMoreThan12();
+    fromGregorianToCJDNDayParameterLessThan1();
+    fromGregorianToCJDNDayParameterMoreThan31();
+    fromGregorianToCJDNConvertSeptember7th2010ToCJDN();
+    fromGregorianToCJDNConvertFebruary29th2000ToCJDN();
+    fromGregorianToCJDNConvertMarch1st2000ToCJDN();
+    fromGregorianToCJDNConvertFebruary28th2001ToCJDN();
+    fromGregorianToCJDNConvertMarch1st2001ToCJDN();
+    fromGregorianToCJDNConvertFebruary28th2100ToCJDN();
+    fromGregorianToCJDNConvertMarch1st2100ToCJDN();
+  });
+}
+
 void fromGregorianToCJDNYearParameterLessThan1900() {
   test('Invalid year parameter (less than 1900) should throw error.', () {
     try {

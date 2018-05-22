@@ -1,6 +1,20 @@
 import 'package:libcalendar/libcalendar.dart';
 import 'package:test/test.dart';
 
+void main() {
+  group('fromCJDNtoGregorian() method tests.', () {
+    fromCJDNtoGregorianCjdnParameterLessThan2415021();
+    fromCJDNtoGregorianCjdnParameterMoreThan2488434();
+    fromCJDNtoGregorianConvert2452827ToGregorian();
+    fromCJDNtoGregorianConvert2451604ToGregorian();
+    fromCJDNtoGregorianConvert2451605ToGregorian();
+    fromCJDNtoGregorianConvert2451969ToGregorian();
+    fromCJDNtoGregorianConvert2451970ToGregorian();
+    fromCJDNtoGregorianConvert2488128ToGregorian();
+    fromCJDNtoGregorianConvert2488129ToGregorian();
+  });
+}
+
 void fromCJDNtoGregorianCjdnParameterLessThan2415021() {
   test('Invalid cjdn parameter (less than 2415021) should throw error.', () {
     try {

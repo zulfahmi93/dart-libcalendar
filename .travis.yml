@@ -5,3 +5,5 @@ dart:
 sudo: false
 os:
   - linux
+
+xvfb: false
