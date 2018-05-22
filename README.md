@@ -1,5 +1,7 @@
 # Calendar Conversion Library for Dart
 
+[![Pub](https://img.shields.io/pub/v/libcalendar.svg?style=flat-square)](https://pub.dartlang.org/packages/libcalendar)
+
 This library defines the following methods for calendar conversion:
 - `fromGregorianToCJDN()`
   - Gregorian calendar to Chronological Julian Day Number (CJDN) conversion.
@@ -20,6 +22,19 @@ This library defines the following methods for calendar conversion:
 
 
 ## How to use
+
+1. Open your `pubspec.yaml` file and add this entry:
+
+    ```yaml
+    libcalendar: ^0.0.2
+    ```
+
+2. Then run `pub get`.
+3. Import this library into your code:
+
+    ```dart
+    import 'package:libpray/libcalendar.dart';
+    ```
 
 A simple usage example:
 
@@ -59,4 +74,4 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 This project is licensed under the MIT License - see the [LICENSE][license] file for details.
 
 [tracker]: https://github.com/zulfahmi93/dart_libcalendar/issues
-[license]: https://github.com/zulfahmi93/dart_libcalendar/blob/dev/LICENSE
+[license]: LICENSE
