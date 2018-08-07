@@ -1,6 +1,7 @@
 # Calendar Conversion Library for Dart
 
 [![Pub](https://img.shields.io/pub/v/libcalendar.svg?style=flat-square)](https://pub.dartlang.org/packages/libcalendar)
+[![Build Status](https://img.shields.io/travis/zulfahmi93/dart_libcalendar.svg?style=flat-square)](https://travis-ci.org/zulfahmi93/dart_libcalendar)
 
 This library defines the following methods for calendar conversion:
 - `fromGregorianToCJDN()`
@@ -26,7 +27,7 @@ This library defines the following methods for calendar conversion:
 1. Open your `pubspec.yaml` file and add this entry:
 
     ```yaml
-    libcalendar: ^0.0.2
+    libcalendar: ^0.1.0
     ```
 
 2. Then run `pub get`.

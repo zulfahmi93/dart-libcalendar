@@ -1,9 +1,12 @@
 language: dart
 dart:
-  - dev
+  - stable
 
 sudo: false
 os:
   - linux
 
 xvfb: false
+
+script:
+ - pub run test
