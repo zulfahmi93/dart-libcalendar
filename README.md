@@ -27,7 +27,7 @@ This library defines the following methods for calendar conversion:
 1. Open your `pubspec.yaml` file and add this entry:
 
     ```yaml
-    libcalendar: ^0.1.0
+    libcalendar: ^0.2.0
     ```
 
 2. Then run `pub get`.
