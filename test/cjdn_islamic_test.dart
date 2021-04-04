@@ -29,7 +29,7 @@ void fromIslamicToCJDNYearParameterLessThan1317() {
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
       expect(
-          e.reason, equals('Parameter [year] should be between 1317 to 1524.'));
+          (e as dynamic).reason, equals('Parameter [year] should be between 1317 to 1524.'));
     }
   });
 }
@@ -42,7 +42,7 @@ void fromIslamicToCJDNYearParameterMoreThan1524() {
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
       expect(
-          e.reason, equals('Parameter [year] should be between 1317 to 1524.'));
+          (e as dynamic).reason, equals('Parameter [year] should be between 1317 to 1524.'));
     }
   });
 }
@@ -55,7 +55,7 @@ void fromIslamicToCJDNMonthParameterLessThan1() {
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
       expect(
-          e.reason, equals('Parameter [month] should be between 1 to 12.'));
+          (e as dynamic).reason, equals('Parameter [month] should be between 1 to 12.'));
     }
   });
 }
@@ -67,7 +67,7 @@ void fromIslamicToCJDNMonthParameterMoreThan12() {
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
+      expect((e as dynamic).reason,
           equals('Parameter [month] should be between 1 to 12.'));
     }
   });
@@ -81,7 +81,7 @@ void fromIslamicToCJDNDayParameterLessThan1() {
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
       expect(
-          e.reason, equals('Parameter [day] should be between 1 to 30.'));
+          (e as dynamic).reason, equals('Parameter [day] should be between 1 to 30.'));
     }
   });
 }
@@ -93,7 +93,7 @@ void fromIslamicToCJDNDayParameterMoreThan30() {
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
+      expect((e as dynamic).reason,
           equals('Parameter [day] should be between 1 to 30.'));
     }
   });
@@ -106,7 +106,7 @@ void fromIslamicToCJDNDateBeforeShaaban28th1317() {
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
+      expect((e as dynamic).reason,
           equals('Invalid Islamic date range. It should be between Sha\'aban 28th, 1317 until Shawwal 29th, 1524.'));
     }
   });
@@ -119,7 +119,7 @@ void fromIslamicToCJDNDateAfterShawwal29th1524() {
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
+      expect((e as dynamic).reason,
           equals('Invalid Islamic date range. It should be between Sha\'aban 28th, 1317 until Shawwal 29th, 1524.'));
     }
   });
@@ -139,7 +139,7 @@ void fromCJDNtoIslamicCjdnParameterLessThan2415021() {
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
+      expect((e as dynamic).reason,
           equals('Parameter [cjdn] should be between 2415021 to 2488434.'));
     }
   });
@@ -152,7 +152,7 @@ void fromCJDNtoIslamicCjdnParameterMoreThan2488434() {
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
+      expect((e as dynamic).reason,
           equals('Parameter [cjdn] should be between 2415021 to 2488434.'));
     }
   });

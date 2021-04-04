@@ -222,7 +222,6 @@ bool _isGregorianLeapYear(int year) {
 /// to Julian Date.
 ///
 double fromGregorianToJulianDate(DateTime dateTimeInUtc) {
-  assert(dateTimeInUtc != null);
   final Logger log = new Logger('libcalendar-fromGregorianToJulianDate()');
 
   // Check UTC-ness.
@@ -243,7 +242,6 @@ double fromGregorianToJulianDate(DateTime dateTimeInUtc) {
 /// [DateTime] object. The [DateTime] object returned will be always in UTC.
 ///
 DateTime fromJulianDateToGregorian(double jd) {
-  assert(jd != null);
 
   final int us = (jd * _kMicrosecondsInOneDay).toInt();
   final Duration duration = new Duration(microseconds: us);
