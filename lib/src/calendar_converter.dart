@@ -1,6 +1,7 @@
 import 'package:logging/logging.dart';
 
-List<int> _kDaysToMonth365 = <int>[
+// ################################# CONSTANTS #################################
+const _kDaysToMonth365 = <int>[
   0,
   31,
   59,
@@ -13,9 +14,9 @@ List<int> _kDaysToMonth365 = <int>[
   273,
   304,
   334,
-  365
+  365,
 ];
-List<int> _kDaysToMonth366 = <int>[
+const _kDaysToMonth366 = <int>[
   0,
   31,
   60,
@@ -28,276 +29,362 @@ List<int> _kDaysToMonth366 = <int>[
   274,
   305,
   335,
-  366
+  366,
 ];
-DateTime _kJulianEpoch = new DateTime.utc(-4713, 11, 24, 12, 0);
-int _kMicrosecondsInOneDay = 86400000000;
+final _kJulianEpoch = DateTime.utc(-4713, 11, 24, 12, 0);
+const _kMicrosecondsInOneDay = 86400000000;
 
-///
-/// Sources: http://aa.quae.nl/en/reken/juliaansedag.html
-///
-
-///
+// ################################# FUNCTIONS #################################
 /// Converts Gregorian calendar, given by parameter [year], [month] and [day]
 /// to Chronological Julian Day Number (CJDN).
 ///
-int fromGregorianToCJDN(int year, int month, int day) {
-  final Logger log = new Logger('libcalendar-fromGregorianToCJDN()');
+/// CJDN is the number of days elapsed since the beginning of the Julian
+/// Period, which started on 4713 BCE January 1 (Julian calendar), which is
+/// equivalent to 4713 BCE November 17 (Gregorian calendar).
+///
+/// CJDN is an integer number of days since the start of the Julian Period.
+/// The number can be positive (after the start of the Julian Period), zero
+/// (at the start of the Julian Period), or negative (before the start of the
+/// Julian Period).
+///
+/// Throws a [CalendarConversionError] if any of these parameters is out of
+/// range:
+/// - [year] should be between 1900 to 2100.
+/// - [month] should be between 1 to 12.
+/// - [day] should be between 1 to 28/29/30/31 depending on the month and year.
+///
+/// The algorithm used in this function to convert Gregorian calendar to CJDN
+/// is based on the algorithm from [1].
+///
+/// [1] http://aa.quae.nl/en/reken/juliaansedag.html
+int fromGregorianToCjdn(int year, int month, int day) {
+  final log = _createLogger('gregorian-to-cjdn')
+    ..finer('Converting Gregorian date $year-$month-$day to CJDN.');
 
   // Check year range.
   if (year < 1900 || year > 2100) {
-    const String msg = 'Parameter [year] should be between 1900 to 2100.';
+    const msg = 'Parameter [year] should be between 1900 to 2100.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
 
   // Check month range.
   if (month < 1 || month > 12) {
-    const String msg = 'Parameter [month] should be between 1 to 12.';
+    const msg = 'Parameter [month] should be between 1 to 12.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
+
+  final isGregorianLeapYear =
+      (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
 
   // Check day validity for given month.
-  final List<int> days =
-      _isGregorianLeapYear(year) ? _kDaysToMonth366 : _kDaysToMonth365;
-  final int maxDay = days[month] - days[month - 1];
+  final days = isGregorianLeapYear ? _kDaysToMonth366 : _kDaysToMonth365;
+  final maxDay = days[month] - days[month - 1];
 
   if (day < 1 || day > maxDay) {
-    final String msg = 'Parameter [day] should be between 1 to $maxDay.';
+    final msg = 'Parameter [day] should be between 1 to $maxDay.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
 
-  final int c0 = ((month - 3) / 12).floor();
-  final int x4 = year + c0;
-  final int x3 = (x4 / 100).floor();
-  final int x2 = x4 % 100;
-  final int x1 = month - (12 * c0) - 3;
-  final int cjdn = ((146097 * x3) / 4).floor() +
+  final c0 = ((month - 3) / 12).floor();
+  final x4 = year + c0;
+  final x3 = (x4 / 100).floor();
+  final x2 = x4 % 100;
+  final x1 = month - (12 * c0) - 3;
+  final cjdn = ((146097 * x3) / 4).floor() +
       ((36525 * x2) / 100).floor() +
       (((153 * x1) + 2) / 5).floor() +
       day +
       1721119;
 
   log
-    ..info('c0 = $c0')
-    ..info('x4 = $x4')
-    ..info('x3 = $x3')
-    ..info('x2 = $x2')
-    ..info('x1 = $x1')
-    ..info('cjdn = $cjdn');
+    ..finest('c0 = $c0')
+    ..finest('x4 = $x4')
+    ..finest('x3 = $x3')
+    ..finest('x2 = $x2')
+    ..finest('x1 = $x1')
+    ..finest('cjdn = $cjdn')
+    ..finer('Gregorian date $year-$month-$day converted to CJDN $cjdn.');
 
   return cjdn;
 }
 
-///
 /// Converts Chronological Julian Day Number (CJDN) given by parameter [cjdn]
-/// to Gregorian calendar as [DateTime] object. The [DateTime] object returned
-/// will be always in UTC.
+/// to Gregorian calendar as a [DateTime] object. The [DateTime] object
+/// returned will always be in UTC.
 ///
-DateTime fromCJDNtoGregorian(int cjdn) {
-  final Logger log = new Logger('libcalendar-fromCJDNtoGregorian()');
+/// The CJDN must be within the range from 2415021 to 2488434, which corresponds
+/// to the dates between 1/1/1900 and 31/12/2100 in the Gregorian calendar.
+///
+/// Throws a [CalendarConversionError] if the [cjdn] is out of range.
+///
+/// The algorithm used in this function to convert CJDN to Gregorian calendar
+/// is based on the algorithm from [1].
+///
+/// [1] http://aa.quae.nl/en/reken/juliaansedag.html
+DateTime fromCjdnToGregorian(int cjdn) {
+  final log = _createLogger('cjdn-to-gregorian')
+    ..finer('Converting CJDN $cjdn to Gregorian calendar.');
 
   // Check range (1/1/1900 to 31/12/2100).
   if (cjdn < 2415021 || cjdn > 2488434) {
-    const String msg = 'Parameter [cjdn] should be between 2415021 to 2488434.';
+    const msg = 'Parameter [cjdn] should be between 2415021 to 2488434.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
 
-  final int k3 = (4 * cjdn) - 6884477;
-  final int x3 = (k3 / 146097).floor();
-  final int r3 = k3 % 146097;
+  final k3 = (4 * cjdn) - 6884477;
+  final x3 = (k3 / 146097).floor();
+  final r3 = k3 % 146097;
 
-  final int k2 = (100 * (r3 / 4).floor()) + 99;
-  final int x2 = (k2 / 36525).floor();
-  final int r2 = k2 % 36525;
+  final k2 = (100 * (r3 / 4).floor()) + 99;
+  final x2 = (k2 / 36525).floor();
+  final r2 = k2 % 36525;
 
-  final int k1 = (5 * (r2 / 100).floor()) + 2;
-  final int x1 = (k1 / 153).floor();
-  final int r1 = k1 % 153;
+  final k1 = (5 * (r2 / 100).floor()) + 2;
+  final x1 = (k1 / 153).floor();
+  final r1 = k1 % 153;
 
-  final int c0 = ((x1 + 2) / 12).floor();
-  final int day = (r1 / 5).floor() + 1;
-  final int month = x1 - (12 * c0) + 3;
-  final int year = (100 * x3) + x2 + c0;
+  final c0 = ((x1 + 2) / 12).floor();
+  final day = (r1 / 5).floor() + 1;
+  final month = x1 - (12 * c0) + 3;
+  final year = (100 * x3) + x2 + c0;
 
   log
-    ..info('x3 = $x3')
-    ..info('x2 = $x2')
-    ..info('x1 = $x1')
-    ..info('c0 = $c0')
-    ..info('day = $day')
-    ..info('month = $month')
-    ..info('year = $year');
+    ..finest('x3 = $x3')
+    ..finest('x2 = $x2')
+    ..finest('x1 = $x1')
+    ..finest('c0 = $c0')
+    ..finest('day = $day')
+    ..finest('month = $month')
+    ..finest('year = $year')
+    ..finer('CJDN $cjdn converted to Gregorian date $year-$month-$day.');
 
-  return new DateTime.utc(year, month, day);
+  return DateTime.utc(year, month, day);
 }
 
+/// Converts an Islamic calendar date, given by parameters [year], [month],
+/// and [day], to a Chronological Julian Day Number (CJDN).
 ///
-/// Converts Islamic calendar, given by parameter [year], [month] and [day]
-/// to Chronological Julian Day Number (CJDN).
+/// The [year] parameter must be between 1317 and 1524, [month] must be
+/// between 1 and 12, and [day] must be between 1 and 30. The Islamic date
+/// range should be from Sha'aban 28th, 1317 to Shawwal 29th, 1524.
 ///
-int fromIslamicToCJDN(int year, int month, int day) {
-  final Logger log = new Logger('libcalendar-fromIslamicToCJDN()');
+/// Throws a [CalendarConversionError] if the date does not fall within the
+/// valid Islamic date range between Sha'aban 28th, 1317 and Shawwal 29th, 1524,
+/// or if any of these parameters is out of
+/// range:
+/// - [year] should be between 1317 to 1524.
+/// - [month] should be between 1 to 12.
+/// - [day] should be between 1 to 30.
+///
+/// Returns the corresponding CJDN as an integer.
+int fromIslamicToCjdn(int year, int month, int day) {
+  final log = _createLogger('islamic-to-cjdn')
+    ..finer('Converting Islamic date $year-$month-$day to CJDN.');
 
   // Check year range.
   if (year < 1317 || year > 1524) {
-    const String msg = 'Parameter [year] should be between 1317 to 1524.';
+    const msg = 'Parameter [year] should be between 1317 to 1524.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
 
   // Check month range.
   if (month < 1 || month > 12) {
-    const String msg = 'Parameter [month] should be between 1 to 12.';
+    const msg = 'Parameter [month] should be between 1 to 12.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
 
   // Check day range.
   if (day < 1 || day > 30) {
-    const String msg = 'Parameter [day] should be between 1 to 30.';
+    const msg = 'Parameter [day] should be between 1 to 30.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
 
   // Check date range.
-  final DateTime date = new DateTime.utc(year, month, day);
-  final DateTime min = new DateTime.utc(1317, 8, 28);
-  final DateTime max = new DateTime.utc(1528, 10, 30);
+  final date = DateTime.utc(year, month, day);
+  final min = DateTime.utc(1317, 8, 28);
+  final max = DateTime.utc(1528, 10, 30);
   if (date.compareTo(min) < 0 || date.compareTo(max) >= 0) {
-    const String msg =
-        'Invalid Islamic date range. It should be between Sha\'aban 28th, 1317 until Shawwal 29th, 1524.';
+    const msg = 'Invalid Islamic date range. It should be between Sha\'aban '
+        '28th, 1317 until Shawwal 29th, 1524.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
 
-  final int k2 = (((10631 * year) - 10617) / 30).floor();
-  final int k1 = (((325 * month) - 320) / 11).floor();
-  final int cjdn = k2 + k1 + day + 1948439;
+  final k2 = (((10631 * year) - 10617) / 30).floor();
+  final k1 = (((325 * month) - 320) / 11).floor();
+  final cjdn = k2 + k1 + day + 1948439;
 
   log
-    ..info('k2 = $k2')
-    ..info('k1 = $k1')
-    ..info('cjdn = $cjdn');
-
+    ..finest('k2 = $k2')
+    ..finest('k1 = $k1')
+    ..finest('cjdn = $cjdn')
+    ..finer('Islamic date $year-$month-$day converted to CJDN $cjdn.');
   return cjdn;
 }
 
+/// Converts a Chronological Julian Day Number (CJDN) given by parameter [cjdn]
+/// to Islamic calendar as a [DateTime] object. The [DateTime] object
+/// returned will always be in UTC.
 ///
-/// Converts Chronological Julian Day Number (CJDN) given by parameter [cjdn]
-/// to Islamic calendar as [DateTime] object. The [DateTime] object returned
-/// will be always in UTC.
+/// The CJDN must be within the range from 2415021 to 2488434, which corresponds
+/// to the dates between 1/1/1900 and 31/12/2100 in the Gregorian calendar.
 ///
-DateTime fromCJDNtoIslamic(int cjdn) {
-  final Logger log = new Logger('libcalendar-fromCJDNtoIslamic()');
+/// Throws a [CalendarConversionError] if the [cjdn] is out of range.
+DateTime fromCjdnToIslamic(int cjdn) {
+  final log = _createLogger('cjdn-to-islamic')
+    ..finest('Converting CJDN $cjdn to Islamic calendar.');
 
   // Check range (1/1/1900 to 31/12/2100).
   if (cjdn < 2415021 || cjdn > 2488434) {
-    const String msg = 'Parameter [cjdn] should be between 2415021 to 2488434.';
+    const msg = 'Parameter [cjdn] should be between 2415021 to 2488434.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
 
-  final int k2 = (30 * (cjdn - 1948440)) + 15;
-  final int k1 = (11 * ((k2 % 10631) / 30).floor()) + 5;
-  final int day = ((k1 % 325) / 11).floor() + 1;
-  final int month = (k1 / 325).floor() + 1;
-  final int year = (k2 / 10631).floor() + 1;
+  final k2 = (30 * (cjdn - 1948440)) + 15;
+  final k1 = (11 * ((k2 % 10631) / 30).floor()) + 5;
+  final day = ((k1 % 325) / 11).floor() + 1;
+  final month = (k1 / 325).floor() + 1;
+  final year = (k2 / 10631).floor() + 1;
 
   log
-    ..info('k2 = $k2')
-    ..info('k1 = $k1')
-    ..info('day = $day')
-    ..info('month = $month')
-    ..info('year = $year');
+    ..finest('k2 = $k2')
+    ..finest('k1 = $k1')
+    ..finest('day = $day')
+    ..finest('month = $month')
+    ..finest('year = $year')
+    ..finer('CJDN $cjdn converted to Islamic date $year-$month-$day.');
 
-  return new DateTime.utc(year, month, day);
+  return DateTime.utc(year, month, day);
 }
 
-///
 /// Converts Gregorian calendar, given by parameter [year], [month] and [day]
-/// to Islamic calendar.
+/// to Islamic calendar as a [DateTime] object. The [DateTime] object
+/// returned will always be in UTC.
 ///
+/// Throws a [CalendarConversionError] if any of these parameters is out of
+/// range:
+/// - [year] should be between 1900 to 2100.
+/// - [month] should be between 1 to 12.
+/// - [day] should be between 1 to 28/29/30/31 depending on the month and year.
 DateTime fromGregorianToIslamic(int year, int month, int day) {
+  final log = _createLogger('gregorian-to-islamic')
+    ..finest(
+      'Converting Gregorian date $year-$month-$day to Islamic calendar.',
+    );
+
   // Convert to CDJN.
-  final int cjdn = fromGregorianToCJDN(year, month, day);
+  final cjdn = fromGregorianToCjdn(year, month, day);
 
   // Convert to Islamic.
-  final DateTime islamic = fromCJDNtoIslamic(cjdn);
+  final islamic = fromCjdnToIslamic(cjdn);
+
+  log.finer(
+    'Gregorian date $year-$month-$day converted to Islamic date '
+    '${islamic.year}-${islamic.month}-${islamic.day}.',
+  );
   return islamic;
 }
 
-///
 /// Converts Islamic calendar, given by parameter [year], [month] and [day]
-/// to Gregorian calendar.
+/// to Gregorian calendar as a [DateTime] object. The [DateTime] object
+/// returned will always be in UTC.
 ///
+/// Throws a [CalendarConversionError] if any of these parameters is out of
+/// range:
+/// - [year] should be between 1317 to 1524.
+/// - [month] should be between 1 to 12.
+/// - [day] should be between 1 to 30.
 DateTime fromIslamicToGregorian(int year, int month, int day) {
+  final log = _createLogger('islamic-to-gregorian')
+    ..finest(
+      'Converting Islamic date $year-$month-$day to Gregorian calendar.',
+    );
+
   // Convert to CDJN.
-  final int cjdn = fromIslamicToCJDN(year, month, day);
+  final cjdn = fromIslamicToCjdn(year, month, day);
 
   // Convert to Gregorian.
-  final DateTime gregorian = fromCJDNtoGregorian(cjdn);
+  final gregorian = fromCjdnToGregorian(cjdn);
+
+  log.finer(
+    'Islamic date $year-$month-$day converted to Gregorian date '
+    '${gregorian.year}-${gregorian.month}-${gregorian.day}.',
+  );
   return gregorian;
 }
 
+/// Converts a Gregorian date and time, given by parameter [dateTimeInUtc],
+/// to Julian Date format as a [double].
 ///
-/// Check whether given Gregorian year is a leap year.
+/// The [dateTimeInUtc] parameter must be in UTC. If it is not, a
+/// [CalendarConversionError] is thrown. Julian Date is a continuous count
+/// of days since the beginning of the Julian period, which is November 24th,
+/// 4713 BCE in the Julian calendar.
 ///
-bool _isGregorianLeapYear(int year) {
-  return (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0));
-}
-
-///
-/// Converts Gregorian date and time, given by parameter [dateTimeInUtc]
-/// to Julian Date.
-///
+/// Returns the Julian Date corresponding to the input Gregorian date and time.
 double fromGregorianToJulianDate(DateTime dateTimeInUtc) {
-  final Logger log = new Logger('libcalendar-fromGregorianToJulianDate()');
+  final log = _createLogger('gregorian-to-julian')
+    ..finer(
+      'Converting Gregorian date and time $dateTimeInUtc to Julian calendar.',
+    );
 
   // Check UTC-ness.
   if (!dateTimeInUtc.isUtc) {
-    const String msg = 'Parameter [dateTimeInUtc] should be in UTC.';
+    const msg = 'Parameter [dateTimeInUtc] should be in UTC.';
     log.severe(msg);
-    throw new CalendarConversionError(msg);
+    throw CalendarConversionError(msg);
   }
 
-  final Duration difference = dateTimeInUtc.difference(_kJulianEpoch);
-  final double jd = difference.inMicroseconds / _kMicrosecondsInOneDay;
+  final difference = dateTimeInUtc.difference(_kJulianEpoch);
+  final jd = difference.inMicroseconds / _kMicrosecondsInOneDay;
 
+  log.finer(
+    'Gregorian date and time $dateTimeInUtc converted to Julian Date $jd.',
+  );
   return jd;
 }
 
+/// Converts Julian Date given by parameter [jd] to Gregorian date and time
+/// as [DateTime] object. The [DateTime] object returned will be always in UTC.
 ///
-/// Converts Julian Date given by parameter [jd]to Gregorian date and time as
-/// [DateTime] object. The [DateTime] object returned will be always in UTC.
+/// Julian Date is a continuous count of days since the beginning of the Julian
+/// period, which is November 17th, 4713 BCE in the Julian calendar.
 ///
+/// The returned [DateTime] object is a point of time in Gregorian calendar
+/// which is equivalent to the given Julian Date.
 DateTime fromJulianDateToGregorian(double jd) {
-  final int us = (jd * _kMicrosecondsInOneDay).toInt();
-  final Duration duration = new Duration(microseconds: us);
-  final DateTime dateTime = _kJulianEpoch.add(duration);
+  final log = _createLogger('julian-to-gregorian')
+    ..finer('Converting Julian Date $jd to Gregorian calendar.');
 
+  final us = (jd * _kMicrosecondsInOneDay).toInt();
+  final duration = Duration(microseconds: us);
+  final dateTime = _kJulianEpoch.add(duration);
+
+  log.finer('Julian Date $jd converted to Gregorian date and time $dateTime.');
   return dateTime;
 }
 
-///
-/// Contains error information thrown by calendar converter methods.
-///
+/// Creates a [Logger] with the name prefixed with 'libcalendar'.
+Logger _createLogger(String methodName) => Logger('libcalendar/$methodName');
+
+// ################################## CLASSES ##################################
+/// Error thrown by calendar converter methods when any invalid operation
+/// occurs.
 class CalendarConversionError extends Error {
-  /* BEGIN FIELD SECTION */
-
-  /// Brief message which tells why the error occured.
-  final String reason;
-
-  /* END FIELD SECTION */
-  /* BEGIN CONSTRUCTOR SECTION */
-
-  ///
-  /// Create new [CalendarConversionError].
-  ///
+  // ------------------------------- CONSTRUCTORS ------------------------------
+  /// Constructs new [CalendarConversionError] with given [reason].
   CalendarConversionError(this.reason);
 
-  /* END CONSTRUCTOR SECTION */
+  // ---------------------------------- FIELDS ---------------------------------
+  /// The reason of the error. This will be a string describing the invalid
+  /// operation occurs when the calendar converter method is called.
+  final String reason;
 }

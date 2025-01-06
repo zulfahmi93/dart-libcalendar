@@ -2,27 +2,27 @@ import 'package:libcalendar/libcalendar.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('fromGregorianToCJDN() method tests.', () {
-    fromGregorianToCJDNYearParameterLessThan1900();
-    fromGregorianToCJDNYearParameterMoreThan2100();
-    fromGregorianToCJDNMonthParameterLessThan1();
-    fromGregorianToCJDNMonthParameterMoreThan12();
-    fromGregorianToCJDNDayParameterLessThan1();
-    fromGregorianToCJDNDayParameterMoreThan31();
-    fromGregorianToCJDNConvertSeptember7th2010ToCJDN();
-    fromGregorianToCJDNConvertFebruary29th2000ToCJDN();
-    fromGregorianToCJDNConvertMarch1st2000ToCJDN();
-    fromGregorianToCJDNConvertFebruary28th2001ToCJDN();
-    fromGregorianToCJDNConvertMarch1st2001ToCJDN();
-    fromGregorianToCJDNConvertFebruary28th2100ToCJDN();
-    fromGregorianToCJDNConvertMarch1st2100ToCJDN();
+  group('fromGregorianToCjdn() method tests.', () {
+    fromGregorianToCjdnYearParameterLessThan1900();
+    fromGregorianToCjdnYearParameterMoreThan2100();
+    fromGregorianToCjdnMonthParameterLessThan1();
+    fromGregorianToCjdnMonthParameterMoreThan12();
+    fromGregorianToCjdnDayParameterLessThan1();
+    fromGregorianToCjdnDayParameterMoreThan31();
+    fromGregorianToCjdnConvertSeptember7th2010ToCJDN();
+    fromGregorianToCjdnConvertFebruary29th2000ToCJDN();
+    fromGregorianToCjdnConvertMarch1st2000ToCJDN();
+    fromGregorianToCjdnConvertFebruary28th2001ToCJDN();
+    fromGregorianToCjdnConvertMarch1st2001ToCJDN();
+    fromGregorianToCjdnConvertFebruary28th2100ToCJDN();
+    fromGregorianToCjdnConvertMarch1st2100ToCJDN();
   });
 }
 
-void fromGregorianToCJDNYearParameterLessThan1900() {
+void fromGregorianToCjdnYearParameterLessThan1900() {
   test('Invalid year parameter (less than 1900) should throw error.', () {
     expect(
-      () => fromGregorianToCJDN(1899, 1, 1),
+      () => fromGregorianToCjdn(1899, 1, 1),
       throwsA(
         predicate(
           (e) =>
@@ -34,10 +34,10 @@ void fromGregorianToCJDNYearParameterLessThan1900() {
   });
 }
 
-void fromGregorianToCJDNYearParameterMoreThan2100() {
+void fromGregorianToCjdnYearParameterMoreThan2100() {
   test('Invalid year parameter (more than 2100) should throw error.', () {
     expect(
-      () => fromGregorianToCJDN(2101, 1, 1),
+      () => fromGregorianToCjdn(2101, 1, 1),
       throwsA(
         predicate(
           (e) =>
@@ -49,10 +49,10 @@ void fromGregorianToCJDNYearParameterMoreThan2100() {
   });
 }
 
-void fromGregorianToCJDNMonthParameterLessThan1() {
+void fromGregorianToCjdnMonthParameterLessThan1() {
   test('Invalid month parameter (less than 1) should throw error.', () {
     expect(
-      () => fromGregorianToCJDN(2000, 0, 1),
+      () => fromGregorianToCjdn(2000, 0, 1),
       throwsA(
         predicate(
           (e) =>
@@ -64,10 +64,10 @@ void fromGregorianToCJDNMonthParameterLessThan1() {
   });
 }
 
-void fromGregorianToCJDNMonthParameterMoreThan12() {
+void fromGregorianToCjdnMonthParameterMoreThan12() {
   test('Invalid month parameter (more than 12) should throw error.', () {
     expect(
-      () => fromGregorianToCJDN(2000, 13, 1),
+      () => fromGregorianToCjdn(2000, 13, 1),
       throwsA(
         predicate(
           (e) =>
@@ -79,10 +79,10 @@ void fromGregorianToCJDNMonthParameterMoreThan12() {
   });
 }
 
-void fromGregorianToCJDNDayParameterLessThan1() {
+void fromGregorianToCjdnDayParameterLessThan1() {
   test('Invalid day parameter (less than 1) should throw error.', () {
     expect(
-      () => fromGregorianToCJDN(2000, 1, 0),
+      () => fromGregorianToCjdn(2000, 1, 0),
       throwsA(
         predicate(
           (e) =>
@@ -94,10 +94,10 @@ void fromGregorianToCJDNDayParameterLessThan1() {
   });
 }
 
-void fromGregorianToCJDNDayParameterMoreThan31() {
+void fromGregorianToCjdnDayParameterMoreThan31() {
   test('Invalid day parameter (more than 31) should throw error.', () {
     expect(
-      () => fromGregorianToCJDN(2000, 1, 32),
+      () => fromGregorianToCjdn(2000, 1, 32),
       throwsA(
         predicate(
           (e) =>
@@ -109,44 +109,44 @@ void fromGregorianToCJDNDayParameterMoreThan31() {
   });
 }
 
-void fromGregorianToCJDNConvertSeptember7th2010ToCJDN() {
+void fromGregorianToCjdnConvertSeptember7th2010ToCJDN() {
   test('Convert September 7th, 2010 to CJDN.', () {
-    expect(fromGregorianToCJDN(2010, 9, 7), equals(2455447));
+    expect(fromGregorianToCjdn(2010, 9, 7), equals(2455447));
   });
 }
 
-void fromGregorianToCJDNConvertFebruary29th2000ToCJDN() {
+void fromGregorianToCjdnConvertFebruary29th2000ToCJDN() {
   test('Convert February 29th, 2000 to CJDN.', () {
-    expect(fromGregorianToCJDN(2000, 2, 29), equals(2451604));
+    expect(fromGregorianToCjdn(2000, 2, 29), equals(2451604));
   });
 }
 
-void fromGregorianToCJDNConvertMarch1st2000ToCJDN() {
+void fromGregorianToCjdnConvertMarch1st2000ToCJDN() {
   test('Convert March 1st, 2000 to CJDN.', () {
-    expect(fromGregorianToCJDN(2000, 3, 1), equals(2451605));
+    expect(fromGregorianToCjdn(2000, 3, 1), equals(2451605));
   });
 }
 
-void fromGregorianToCJDNConvertFebruary28th2001ToCJDN() {
+void fromGregorianToCjdnConvertFebruary28th2001ToCJDN() {
   test('Convert February 28th, 2001 to CJDN.', () {
-    expect(fromGregorianToCJDN(2001, 2, 28), equals(2451969));
+    expect(fromGregorianToCjdn(2001, 2, 28), equals(2451969));
   });
 }
 
-void fromGregorianToCJDNConvertMarch1st2001ToCJDN() {
+void fromGregorianToCjdnConvertMarch1st2001ToCJDN() {
   test('Convert March 1st, 2001 to CJDN.', () {
-    expect(fromGregorianToCJDN(2001, 3, 1), equals(2451970));
+    expect(fromGregorianToCjdn(2001, 3, 1), equals(2451970));
   });
 }
 
-void fromGregorianToCJDNConvertFebruary28th2100ToCJDN() {
+void fromGregorianToCjdnConvertFebruary28th2100ToCJDN() {
   test('Convert February 28th, 2100 to CJDN.', () {
-    expect(fromGregorianToCJDN(2100, 2, 28), equals(2488128));
+    expect(fromGregorianToCjdn(2100, 2, 28), equals(2488128));
   });
 }
 
-void fromGregorianToCJDNConvertMarch1st2100ToCJDN() {
+void fromGregorianToCjdnConvertMarch1st2100ToCJDN() {
   test('Convert March 1st, 2100 to CJDN.', () {
-    expect(fromGregorianToCJDN(2100, 3, 1), equals(2488129));
+    expect(fromGregorianToCjdn(2100, 3, 1), equals(2488129));
   });
 }
