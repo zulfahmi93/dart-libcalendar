@@ -1,7 +1,8 @@
 # Calendar Conversion Library for Dart
 
 [![Pub](https://img.shields.io/pub/v/libcalendar.svg?style=flat-square)](https://pub.dartlang.org/packages/libcalendar)
-[![Build Status](https://img.shields.io/travis/zulfahmi93/dart_libcalendar.svg?style=flat-square)](https://travis-ci.org/zulfahmi93/dart_libcalendar)
+
+[//]: # ([![Build Status]&#40;https://img.shields.io/travis/zulfahmi93/dart_libcalendar.svg?style=flat-square&#41;]&#40;https://travis-ci.org/zulfahmi93/dart_libcalendar&#41;)
 
 This library defines the following methods for calendar conversion:
 - `fromGregorianToCJDN()`
