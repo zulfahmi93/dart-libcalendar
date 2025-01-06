@@ -1,6 +1,6 @@
 name: libcalendar
-description: Calendar Conversion Library for Dart.
-version: 0.3.0
+description: A Dart library for converting dates between Gregorian, Islamic, CJDN, and Julian calendars.
+version: 0.3.1
 homepage: https://github.com/zulfahmi93/dart_libcalendar
 
 environment:
