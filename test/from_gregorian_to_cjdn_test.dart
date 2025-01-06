@@ -21,79 +21,91 @@ void main() {
 
 void fromGregorianToCJDNYearParameterLessThan1900() {
   test('Invalid year parameter (less than 1900) should throw error.', () {
-    try {
-      fromGregorianToCJDN(1899, 1, 1);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(
-          e.reason, equals('Parameter [year] should be between 1900 to 2100.'));
-    }
+    expect(
+      () => fromGregorianToCJDN(1899, 1, 1),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [year] should be between 1900 to 2100.',
+        ),
+      ),
+    );
   });
 }
 
 void fromGregorianToCJDNYearParameterMoreThan2100() {
   test('Invalid year parameter (more than 2100) should throw error.', () {
-    try {
-      fromGregorianToCJDN(2101, 1, 1);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Parameter [year] should be between 1900 to 2100.'));
-    }
+    expect(
+      () => fromGregorianToCJDN(2101, 1, 1),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [year] should be between 1900 to 2100.',
+        ),
+      ),
+    );
   });
 }
 
 void fromGregorianToCJDNMonthParameterLessThan1() {
   test('Invalid month parameter (less than 1) should throw error.', () {
-    try {
-      fromGregorianToCJDN(2000, 0, 1);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(
-          e.reason, equals('Parameter [month] should be between 1 to 12.'));
-    }
+    expect(
+      () => fromGregorianToCJDN(2000, 0, 1),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [month] should be between 1 to 12.',
+        ),
+      ),
+    );
   });
 }
 
 void fromGregorianToCJDNMonthParameterMoreThan12() {
   test('Invalid month parameter (more than 12) should throw error.', () {
-    try {
-      fromGregorianToCJDN(2000, 13, 1);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Parameter [month] should be between 1 to 12.'));
-    }
+    expect(
+      () => fromGregorianToCJDN(2000, 13, 1),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [month] should be between 1 to 12.',
+        ),
+      ),
+    );
   });
 }
 
 void fromGregorianToCJDNDayParameterLessThan1() {
   test('Invalid day parameter (less than 1) should throw error.', () {
-    try {
-      fromGregorianToCJDN(2000, 1, 0);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(
-          e.reason, equals('Parameter [day] should be between 1 to 31.'));
-    }
+    expect(
+      () => fromGregorianToCJDN(2000, 1, 0),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [day] should be between 1 to 31.',
+        ),
+      ),
+    );
   });
 }
 
 void fromGregorianToCJDNDayParameterMoreThan31() {
   test('Invalid day parameter (more than 31) should throw error.', () {
-    try {
-      fromGregorianToCJDN(2000, 1, 32);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Parameter [day] should be between 1 to 31.'));
-    }
+    expect(
+      () => fromGregorianToCJDN(2000, 1, 32),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [day] should be between 1 to 31.',
+        ),
+      ),
+    );
   });
 }
 

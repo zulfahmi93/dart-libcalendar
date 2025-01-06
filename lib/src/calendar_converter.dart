@@ -1,10 +1,37 @@
 import 'package:logging/logging.dart';
 
-List<int> _kDaysToMonth365 = <int>[0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
-List<int> _kDaysToMonth366 = <int>[0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
+List<int> _kDaysToMonth365 = <int>[
+  0,
+  31,
+  59,
+  90,
+  120,
+  151,
+  181,
+  212,
+  243,
+  273,
+  304,
+  334,
+  365
+];
+List<int> _kDaysToMonth366 = <int>[
+  0,
+  31,
+  60,
+  91,
+  121,
+  152,
+  182,
+  213,
+  244,
+  274,
+  305,
+  335,
+  366
+];
 DateTime _kJulianEpoch = new DateTime.utc(-4713, 11, 24, 12, 0);
 int _kMicrosecondsInOneDay = 86400000000;
-
 
 ///
 /// Sources: http://aa.quae.nl/en/reken/juliaansedag.html
@@ -21,24 +48,25 @@ int fromGregorianToCJDN(int year, int month, int day) {
   if (year < 1900 || year > 2100) {
     const String msg = 'Parameter [year] should be between 1900 to 2100.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   // Check month range.
   if (month < 1 || month > 12) {
     const String msg = 'Parameter [month] should be between 1 to 12.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   // Check day validity for given month.
-  final List<int> days = _isGregorianLeapYear(year) ? _kDaysToMonth366 : _kDaysToMonth365;
+  final List<int> days =
+      _isGregorianLeapYear(year) ? _kDaysToMonth366 : _kDaysToMonth365;
   final int maxDay = days[month] - days[month - 1];
 
   if (day < 1 || day > maxDay) {
     final String msg = 'Parameter [day] should be between 1 to $maxDay.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   final int c0 = ((month - 3) / 12).floor();
@@ -46,7 +74,11 @@ int fromGregorianToCJDN(int year, int month, int day) {
   final int x3 = (x4 / 100).floor();
   final int x2 = x4 % 100;
   final int x1 = month - (12 * c0) - 3;
-  final int cjdn = ((146097 * x3) / 4).floor() + ((36525 * x2) / 100).floor() + (((153 * x1) + 2) / 5).floor() + day + 1721119;
+  final int cjdn = ((146097 * x3) / 4).floor() +
+      ((36525 * x2) / 100).floor() +
+      (((153 * x1) + 2) / 5).floor() +
+      day +
+      1721119;
 
   log
     ..info('c0 = $c0')
@@ -71,7 +103,7 @@ DateTime fromCJDNtoGregorian(int cjdn) {
   if (cjdn < 2415021 || cjdn > 2488434) {
     const String msg = 'Parameter [cjdn] should be between 2415021 to 2488434.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   final int k3 = (4 * cjdn) - 6884477;
@@ -114,21 +146,21 @@ int fromIslamicToCJDN(int year, int month, int day) {
   if (year < 1317 || year > 1524) {
     const String msg = 'Parameter [year] should be between 1317 to 1524.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   // Check month range.
   if (month < 1 || month > 12) {
     const String msg = 'Parameter [month] should be between 1 to 12.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   // Check day range.
   if (day < 1 || day > 30) {
     const String msg = 'Parameter [day] should be between 1 to 30.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   // Check date range.
@@ -136,9 +168,10 @@ int fromIslamicToCJDN(int year, int month, int day) {
   final DateTime min = new DateTime.utc(1317, 8, 28);
   final DateTime max = new DateTime.utc(1528, 10, 30);
   if (date.compareTo(min) < 0 || date.compareTo(max) >= 0) {
-    const String msg = 'Invalid Islamic date range. It should be between Sha\'aban 28th, 1317 until Shawwal 29th, 1524.';
+    const String msg =
+        'Invalid Islamic date range. It should be between Sha\'aban 28th, 1317 until Shawwal 29th, 1524.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   final int k2 = (((10631 * year) - 10617) / 30).floor();
@@ -165,7 +198,7 @@ DateTime fromCJDNtoIslamic(int cjdn) {
   if (cjdn < 2415021 || cjdn > 2488434) {
     const String msg = 'Parameter [cjdn] should be between 2415021 to 2488434.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   final int k2 = (30 * (cjdn - 1948440)) + 15;
@@ -222,14 +255,13 @@ bool _isGregorianLeapYear(int year) {
 /// to Julian Date.
 ///
 double fromGregorianToJulianDate(DateTime dateTimeInUtc) {
-  assert(dateTimeInUtc != null);
   final Logger log = new Logger('libcalendar-fromGregorianToJulianDate()');
 
   // Check UTC-ness.
   if (!dateTimeInUtc.isUtc) {
     const String msg = 'Parameter [dateTimeInUtc] should be in UTC.';
     log.severe(msg);
-    throw new _CalendarConversionError(msg);
+    throw new CalendarConversionError(msg);
   }
 
   final Duration difference = dateTimeInUtc.difference(_kJulianEpoch);
@@ -243,8 +275,6 @@ double fromGregorianToJulianDate(DateTime dateTimeInUtc) {
 /// [DateTime] object. The [DateTime] object returned will be always in UTC.
 ///
 DateTime fromJulianDateToGregorian(double jd) {
-  assert(jd != null);
-
   final int us = (jd * _kMicrosecondsInOneDay).toInt();
   final Duration duration = new Duration(microseconds: us);
   final DateTime dateTime = _kJulianEpoch.add(duration);
@@ -255,7 +285,7 @@ DateTime fromJulianDateToGregorian(double jd) {
 ///
 /// Contains error information thrown by calendar converter methods.
 ///
-class _CalendarConversionError extends Error {
+class CalendarConversionError extends Error {
   /* BEGIN FIELD SECTION */
 
   /// Brief message which tells why the error occured.
@@ -265,9 +295,9 @@ class _CalendarConversionError extends Error {
   /* BEGIN CONSTRUCTOR SECTION */
 
   ///
-  /// Create new [_CalendarConversionError].
+  /// Create new [CalendarConversionError].
   ///
-  _CalendarConversionError(this.reason);
+  CalendarConversionError(this.reason);
 
   /* END CONSTRUCTOR SECTION */
 }

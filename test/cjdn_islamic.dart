@@ -23,105 +23,126 @@ void main() {
 
 void fromIslamicToCJDNYearParameterLessThan1317() {
   test('Invalid year parameter (less than 1317) should throw error.', () {
-    try {
-      fromIslamicToCJDN(1316, 1, 1);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(
-          e.reason, equals('Parameter [year] should be between 1317 to 1524.'));
-    }
+    expect(
+      () => fromIslamicToCJDN(1316, 1, 1),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [year] should be between 1317 to 1524.',
+        ),
+      ),
+    );
   });
 }
 
 void fromIslamicToCJDNYearParameterMoreThan1524() {
   test('Invalid year parameter (more than 1524) should throw error.', () {
-    try {
-      fromIslamicToCJDN(1525, 1, 1);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(
-          e.reason, equals('Parameter [year] should be between 1317 to 1524.'));
-    }
+    expect(
+      () => fromIslamicToCJDN(1525, 1, 1),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [year] should be between 1317 to 1524.',
+        ),
+      ),
+    );
   });
 }
 
 void fromIslamicToCJDNMonthParameterLessThan1() {
   test('Invalid month parameter (less than 1) should throw error.', () {
-    try {
-      fromIslamicToCJDN(1430, 0, 1);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(
-          e.reason, equals('Parameter [month] should be between 1 to 12.'));
-    }
+    expect(
+      () => fromIslamicToCJDN(1430, 0, 1),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [month] should be between 1 to 12.',
+        ),
+      ),
+    );
   });
 }
 
 void fromIslamicToCJDNMonthParameterMoreThan12() {
   test('Invalid month parameter (more than 12) should throw error.', () {
-    try {
-      fromIslamicToCJDN(1430, 13, 1);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Parameter [month] should be between 1 to 12.'));
-    }
+    expect(
+      () => fromIslamicToCJDN(1430, 13, 1),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [month] should be between 1 to 12.',
+        ),
+      ),
+    );
   });
 }
 
 void fromIslamicToCJDNDayParameterLessThan1() {
   test('Invalid day parameter (less than 1) should throw error.', () {
-    try {
-      fromIslamicToCJDN(1430, 1, 0);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(
-          e.reason, equals('Parameter [day] should be between 1 to 30.'));
-    }
+    expect(
+      () => fromIslamicToCJDN(1430, 1, 0),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [day] should be between 1 to 30.',
+        ),
+      ),
+    );
   });
 }
 
 void fromIslamicToCJDNDayParameterMoreThan30() {
   test('Invalid day parameter (more than 30) should throw error.', () {
-    try {
-      fromIslamicToCJDN(1430, 1, 31);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Parameter [day] should be between 1 to 30.'));
-    }
+    expect(
+      () => fromIslamicToCJDN(1430, 1, 31),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason == 'Parameter [day] should be between 1 to 30.',
+        ),
+      ),
+    );
   });
 }
 
 void fromIslamicToCJDNDateBeforeShaaban28th1317() {
-  test('Invalid date range (before Sha\'aban 28th, 1317) should throw error.', () {
-    try {
-      fromIslamicToCJDN(1317, 8, 27);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Invalid Islamic date range. It should be between Sha\'aban 28th, 1317 until Shawwal 29th, 1524.'));
-    }
+  test('Invalid date range (before Sha\'aban 28th, 1317) should throw error.',
+      () {
+    expect(
+      () => fromIslamicToCJDN(1317, 8, 27),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason ==
+                  'Invalid Islamic date range. It should be between Sha\'aban '
+                      '28th, 1317 until Shawwal 29th, 1524.',
+        ),
+      ),
+    );
   });
 }
 
 void fromIslamicToCJDNDateAfterShawwal29th1524() {
   test('Invalid date range (after Shawwal 29th, 1524) should throw error.', () {
-    try {
-      fromIslamicToCJDN(1524, 11, 1);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Invalid Islamic date range. It should be between Sha\'aban 28th, 1317 until Shawwal 29th, 1524.'));
-    }
+    expect(
+      () => fromIslamicToCJDN(1524, 11, 1),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason ==
+                  'Invalid Islamic date range. It should be between Sha\'aban '
+                      '28th, 1317 until Shawwal 29th, 1524.',
+        ),
+      ),
+    );
   });
 }
 
@@ -131,30 +152,35 @@ void fromIslamicToCJDNConvertShaaban29th1432ToCJDN() {
   });
 }
 
-
 void fromCJDNtoIslamicCjdnParameterLessThan2415021() {
   test('Invalid cjdn parameter (less than 2415021) should throw error.', () {
-    try {
-      fromCJDNtoIslamic(2415020);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Parameter [cjdn] should be between 2415021 to 2488434.'));
-    }
+    expect(
+      () => fromCJDNtoIslamic(2415020),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason ==
+                  'Parameter [cjdn] should be between 2415021 to 2488434.',
+        ),
+      ),
+    );
   });
 }
 
 void fromCJDNtoIslamicCjdnParameterMoreThan2488434() {
   test('Invalid cjdn parameter (more than 2488434) should throw error.', () {
-    try {
-      fromCJDNtoIslamic(2488435);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Parameter [cjdn] should be between 2415021 to 2488434.'));
-    }
+    expect(
+      () => fromCJDNtoIslamic(2488435),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason ==
+                  'Parameter [cjdn] should be between 2415021 to 2488434.',
+        ),
+      ),
+    );
   });
 }
 

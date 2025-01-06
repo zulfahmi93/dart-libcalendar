@@ -17,27 +17,33 @@ void main() {
 
 void fromCJDNtoGregorianCjdnParameterLessThan2415021() {
   test('Invalid cjdn parameter (less than 2415021) should throw error.', () {
-    try {
-      fromCJDNtoGregorian(2415020);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Parameter [cjdn] should be between 2415021 to 2488434.'));
-    }
+    expect(
+      () => fromCJDNtoGregorian(2415020),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason ==
+                  'Parameter [cjdn] should be between 2415021 to 2488434.',
+        ),
+      ),
+    );
   });
 }
 
 void fromCJDNtoGregorianCjdnParameterMoreThan2488434() {
   test('Invalid cjdn parameter (more than 2488434) should throw error.', () {
-    try {
-      fromCJDNtoGregorian(2488435);
-      // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      expect(e.runtimeType.toString(), equals('_CalendarConversionError'));
-      expect(e.reason,
-          equals('Parameter [cjdn] should be between 2415021 to 2488434.'));
-    }
+    expect(
+      () => fromCJDNtoGregorian(2488435),
+      throwsA(
+        predicate(
+          (e) =>
+              e is CalendarConversionError &&
+              e.reason ==
+                  'Parameter [cjdn] should be between 2415021 to 2488434.',
+        ),
+      ),
+    );
   });
 }
 
