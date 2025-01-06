@@ -1,0 +1,31 @@
+name: Run libcalendar unit tests
+on:
+  push
+    # tags:
+      # - github-action-*
+      # - rel/v*
+jobs:
+  unit_test_libcalendar:
+    name: Run libcalendar unit tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk: [3.6, stable, beta]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+
+      - name: Install dependencies
+        working-directory: ./
+        run: dart pub get
+
+      - name: Run unit tests
+        working-directory: ./
+        run: dart test
